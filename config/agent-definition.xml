@@ -31,21 +31,21 @@
 		<data-collection enable-cron="false">
 
 			<collector name="Collect Frequent Downloads" method-name="collectFrequentDownloads"
-				value="15" unit="minutes">
+				value="10" unit="minutes">
 
 			</collector>
 		</data-collection>
 		<properties>
 			<group id="FXMLogin">
-				<string id="userName" canBeBlank="false" label="MySQL Username" />
-				<string id="password" canBeBlank="false" encrypted="true"
+				<string id="userName" canBeBlank="false" label="MySQL Username"  default="foglight"/>
+				<string id="password" canBeBlank="false" encrypted="true" default="foglight"
 					label="MySQL Password" />
-				<string id="fxmHostname" canBeBlank="false" label="FXM Hostname/IP" />
+				<string id="fxmHostname" canBeBlank="false" label="FXM Hostname/IP"  default="10.10.8.130"/>
 				<integer id="fxmPort" canBeBlank="false" default="3306" renderInline="true" gtEqualZero="true" notEqualZero="true"/>
 			</group>
 			<group id="FrequentDownloads" label="Frequent Downloaders">
-			<integer id="lowLimit" label="Low Limit of Requests:" gtEqualZero="true" />
-			<integer id="numSessions" gtEqualZero="true" label="Session count to report"/>
+			<integer id="lowLimit" label="Low Limit of Requests:" gtEqualZero="true"  default="1000"/>
+			<integer id="numSessions" gtEqualZero="true" label="Session count to report" default="10"/>
 			</group>
 		</properties>
 	</agent>

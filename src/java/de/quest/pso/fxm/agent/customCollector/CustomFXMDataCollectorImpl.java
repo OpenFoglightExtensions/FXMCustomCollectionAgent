@@ -21,6 +21,7 @@ package de.quest.pso.fxm.agent.customCollector;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
+import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
@@ -89,8 +90,8 @@ public class CustomFXMDataCollectorImpl implements
 		// and allows it to contribute information to the support bundle.
 		mBundle = new CustomFXMDataCollectorSupportBundle(this);
 		mRegistrationService.registerAllListeners(mBundle);
-		mProperties = new CustomFXMDataCollectorPropertyWrapper(serviceFactory.getService(ASPService3.class));
-		
+		mProperties = new CustomFXMDataCollectorPropertyWrapper(
+				serviceFactory.getService(ASPService3.class));
 
 		// Log some basic info to indicate that the agent has been created
 		mLogger.log("agentVersion", "CustomFXMDataCollector", "1.0.0");
@@ -115,46 +116,7 @@ public class CustomFXMDataCollectorImpl implements
 	@Override
 	public void startDataCollection() {
 		mLogger.debug("Data collection started");
-		Connection connect = null;
 
-		// This will load the MySQL driver, each DB has its own driver
-
-		try {
-			Class.forName("com.mysql.jdbc.Driver");
-			// Setup the connection with the DB
-			connect = DriverManager
-					.getConnection("jdbc:mysql://10.10.8.130:3306/UserSession?"
-							+ "user=foglight&password=foglight");
-			mLogger.debug("Connection :"+connect.toString());
-			
-			// Statements allow to issue SQL queries to the database
-			Statement statement = connect.createStatement();
-			// Result set get the result of the SQL query
-			ResultSet resultSet = statement
-					.executeQuery("select s.ClientIP saugerip, u.Count anzahl from Session s, UserSessionValueCount u where s.ResourceID = u.ResourceID and s.UserAgent not like '%bot%' and u.Count > 1000 order by u.Count desc limit 20;");
-
-			mLogger.debug("Result :"+resultSet.toString());
-			System.out.println("Result :"+resultSet.toString());
-			resultSet.beforeFirst();
-			int i = 1;
-			while (resultSet.next()) {
-				System.out.println(i+" : "+resultSet.getString(1)+"   ,   "+resultSet.getString(2));
-				i++;
-			}
-			connect.close();
-		} catch (ClassNotFoundException e) {
-			mLogger.errorUnexpected("noDriver", e);
-		} catch (SQLException e) {
-			mLogger.errorUnexpected("sqlException", e);
-			
-		} finally {
-			if (connect != null)
-				try {
-					connect.close();
-				} catch (SQLException e) {
-				
-				}
-		}
 	}
 
 	/**
@@ -191,6 +153,59 @@ public class CustomFXMDataCollectorImpl implements
 	@Override
 	public void collectFrequentDownloads(long collectionFreqInMs) {
 		mLogger.debug("Collect Frequent Downloads collector invoked");
+		// This will load the MySQL driver, each DB has its own driver
+		mLogger.debug("SampleFreq:" + collectionFreqInMs);
+		Connection connect = null;
+
+		try {
+			Class.forName("com.mysql.jdbc.Driver");
+			// Setup the connection with the DB
+			connect = DriverManager.getConnection("jdbc:mysql://"
+					+ mProperties.getFxmHostname() + ":"
+					+ mProperties.getFxmPort() + "/UserSession?" + "user="
+					+ mProperties.getUserName() + "&password="
+					+ mProperties.getPassword());
+
+			mLogger.debug("Connection established !");
+
+			// Statements allow to issue SQL queries to the database
+			Statement statement = connect.createStatement();
+			// Result set get the result of the SQL query
+			// .executeQuery("select s.ClientIP saugerip, u.Count anzahl from Session s, UserSessionValueCount u where s.ResourceID = u.ResourceID and s.UserAgent not like '%bot%' and u.Count > 1000 order by u.Count desc limit 20;");
+
+			PreparedStatement preparedStatement = connect
+					.prepareStatement("select s.ClientIP saugerip, u.Count anzahl "
+							+ "from Session s, UserSessionValueCount u "
+							+ "where s.ResourceID = u.ResourceID and s.UserAgent not like '%bot%' and u.Count > ? "
+							+ "order by u.Count desc limit ?;");
+
+			preparedStatement.setInt(1, mProperties.getLowLimit());
+			preparedStatement.setInt(2, mProperties.getNumSessions());
+			ResultSet resultSet = preparedStatement.executeQuery();
+
+			mLogger.debug("Result :" + resultSet.toString());
+			System.out.println("Result :" + resultSet.toString());
+			resultSet.beforeFirst();
+			int i = 1;
+			while (resultSet.next()) {
+				System.out.println(i + " : " + resultSet.getString(1)
+						+ "   ,   " + resultSet.getString(2));
+				i++;
+			}
+			connect.close();
+		} catch (ClassNotFoundException e) {
+			mLogger.errorUnexpected("noDriver", e);
+		} catch (SQLException e) {
+			mLogger.errorUnexpected("sqlException", e);
+
+		} finally {
+			if (connect != null)
+				try {
+					connect.close();
+				} catch (SQLException e) {
+
+				}
+		}
 	}
 
 }
