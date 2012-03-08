@@ -35,11 +35,11 @@
 	</type>
 
 	<type name='TopHitSessionsValue' extends='ObservedValue'>
-	   <property name='value' type='TopHitSessionsValue' is-many='false' is-containment='false'/>
+	   <property name='value' type='TopHitSessionsEntry' is-many='true' is-containment='false'/>
 	   </type>
 	<type name='TopHitSessionsEntry' extends='DataObject'>
         <property name='ipAdresse' type='String' is-many='false' is-containment='false' is-identity="true"/>
-        <property name='hits' type='Long' is-many='false' is-containment='false'/>
+        <property name='hits' type='Long' is-many='false' is-containment='false' unit-name="count"/>
     </type>
 
     <!-- New observation types have to extend either the StringObservation or 
