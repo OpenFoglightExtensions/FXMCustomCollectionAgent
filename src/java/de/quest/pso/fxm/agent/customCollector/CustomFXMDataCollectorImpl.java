@@ -25,9 +25,12 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.util.List;
 
 import de.quest.pso.fxm.agent.customCollector.samples.*;
+
 import com.quest.glue.api.services.*;
+import com.quest.glue.api.services.TopologyDataSubmissionService3.TopologySubmitter3;
 
 /**
  * The core implementation class of the CustomFXMDataCollector agent.
@@ -37,12 +40,16 @@ public class CustomFXMDataCollectorImpl implements
 
 		ASPPropertyListener {
 
+	public static final String FXM_CUSTOM_MODEL_NAME = "FXMCustomModel";
 	private final LogService.Logger mLogger;
 	private final RegistrationService mRegistrationService;
 	private final CustomFXMDataCollectorSupportBundle mBundle;
 
 	private final CustomFXMDataCollectorDataProvider mDataProvider;
 	private CustomFXMDataCollectorPropertyWrapper mProperties;
+	private TopologySubmitter3 mSubmitter;
+	private UnitService mUnitService;
+	private TimestampService mTimestampService;
 
 	/**
 	 * Called by FglAM to create a new instance of this agent. This constructor
@@ -92,7 +99,12 @@ public class CustomFXMDataCollectorImpl implements
 		mRegistrationService.registerAllListeners(mBundle);
 		mProperties = new CustomFXMDataCollectorPropertyWrapper(
 				serviceFactory.getService(ASPService3.class));
+		
+		mSubmitter = serviceFactory.getService(TopologyDataSubmissionService3.class).getTopologySubmitter();
+		mUnitService = serviceFactory.getService(UnitService.class);
 
+		mTimestampService = serviceFactory.getService(TimestampService.class);
+		
 		// Log some basic info to indicate that the agent has been created
 		mLogger.log("agentVersion", "CustomFXMDataCollector", "1.0.0");
 	}
@@ -184,19 +196,36 @@ public class CustomFXMDataCollectorImpl implements
 			ResultSet resultSet = preparedStatement.executeQuery();
 
 			mLogger.debug("Result :" + resultSet.toString());
-			System.out.println("Result :" + resultSet.toString());
+
+			CustomFXMCollection collection = new CustomFXMCollection(mProperties.getFxmHostname(), new CustomFXMCollectionRoot(FXM_CUSTOM_MODEL_NAME));
+
+			CustomFXMFrequentHitSessions frequentHits = new CustomFXMFrequentHitSessions();
+			collection.setFrequentHits(frequentHits );
+			
+		 List<TopHitSessionsEntry> sessions = frequentHits.getTopHitSessions();
+			
 			resultSet.beforeFirst();
 			int i = 1;
 			while (resultSet.next()) {
 				System.out.println(i + " : " + resultSet.getString(1)
 						+ "   ,   " + resultSet.getString(2));
 				i++;
+			
+				TopHitSessionsEntry entry = new TopHitSessionsEntry(resultSet.getString(1));
+				entry.setHits(resultSet.getLong(2));
+				sessions.add(entry);
 			}
+			
+				collection.submit(mSubmitter, mUnitService, collectionFreqInMs, mTimestampService.getCorrectedTimestamp().getTimeInMillis());
 			connect.close();
 		} catch (ClassNotFoundException e) {
 			mLogger.errorUnexpected("noDriver", e);
 		} catch (SQLException e) {
 			mLogger.errorUnexpected("sqlException", e);
+
+		} catch (TopologyException e) {
+			// TODO Auto-generated catch block
+			mLogger.errorUnexpected("TopologyException", e);
 
 		} finally {
 			if (connect != null)
