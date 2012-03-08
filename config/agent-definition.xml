@@ -1,49 +1,48 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!--
-  Copyright 2012 Quest Software, Inc.
-  ALL RIGHTS RESERVED.
-
-  This software is the confidential and proprietary information of
-  Quest Software Inc. ("Confidential Information").  You shall not
-  disclose such Confidential Information and shall use it only in
-  accordance with the terms of the license agreement you entered
-  into with Quest Software Inc.
-
-  QUEST SOFTWARE INC. MAKES NO REPRESENTATIONS OR WARRANTIES ABOUT
-  THE SUITABILITY OF THE SOFTWARE, EITHER EXPRESS OR IMPLIED,
-  INCLUDING BUT NOT LIMITED TO THE IMPLIED WARRANTIES OF
-  MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE, OR
-  NON-INFRINGEMENT. QUEST SOFTWARE SHALL NOT BE LIABLE FOR ANY
-  DAMAGES SUFFERED BY LICENSEE AS A RESULT OF USING, MODIFYING
-  OR DISTRIBUTING THIS SOFTWARE OR ITS DERIVATIVES.
- -->
+<!-- Copyright 2012 Quest Software, Inc. ALL RIGHTS RESERVED. This software 
+	is the confidential and proprietary information of Quest Software Inc. ("Confidential 
+	Information"). You shall not disclose such Confidential Information and shall 
+	use it only in accordance with the terms of the license agreement you entered 
+	into with Quest Software Inc. QUEST SOFTWARE INC. MAKES NO REPRESENTATIONS 
+	OR WARRANTIES ABOUT THE SUITABILITY OF THE SOFTWARE, EITHER EXPRESS OR IMPLIED, 
+	INCLUDING BUT NOT LIMITED TO THE IMPLIED WARRANTIES OF MERCHANTABILITY, FITNESS 
+	FOR A PARTICULAR PURPOSE, OR NON-INFRINGEMENT. QUEST SOFTWARE SHALL NOT BE 
+	LIABLE FOR ANY DAMAGES SUFFERED BY LICENSEE AS A RESULT OF USING, MODIFYING 
+	OR DISTRIBUTING THIS SOFTWARE OR ITS DERIVATIVES. -->
 
 <agent-definition xmlns="urn:X-quest.com:glue/agent/definition/1.9"
-                  name="CustomFXMDataCollector" 
-                  allow-asynchronous-access="true"
-                  ver="1.0.0">
+	name="CustomFXMDataCollector" allow-asynchronous-access="true" ver="1.0.0">
 
-    <!-- Since this configuration was generated with version 5.6.2 of the 
-         developer's kit, it requires at least a matching version of FglAM -->
-    <host-version min="5.6.2"/>                   
+	<!-- Since this configuration was generated with version 5.6.2 of the developer's 
+		kit, it requires at least a matching version of FglAM -->
+	<host-version min="5.6.2" />
 
-    <topology-types package="de.quest.pso.fxm.agent.customCollector.samples">
-        <!-- Relative file names are resolved against the directory
-             that this file is in -->
-        <topology-file filename="../config/CustomFXMDataCollector-topology.xml"/>
-        
-        <!-- Other topology files can be included here if necessary -->
-    </topology-types>
+	<topology-types package="de.quest.pso.fxm.agent.customCollector.samples">
+		<!-- Relative file names are resolved against the directory that this file 
+			is in -->
+		<topology-file filename="../config/CustomFXMDataCollector-topology.xml" />
 
-    <agent name="CustomFXMDataCollector" package="de.quest.pso.fxm.agent.customCollector" class-name="CustomFXMDataCollectorImpl">
-        <!-- Collectors -->
-        <data-collection enable-cron="false">
+		<!-- Other topology files can be included here if necessary -->
+	</topology-types>
 
-          <collector name="Collect Frequent Downloads" method-name="collectFrequentDownloads" value="15" unit="minutes">
-              
-          </collector>
-        </data-collection>
+	<agent name="CustomFXMDataCollector" package="de.quest.pso.fxm.agent.customCollector"
+		class-name="CustomFXMDataCollectorImpl">
+		<!-- Collectors -->
+		<data-collection enable-cron="false">
 
-    </agent>
+			<collector name="Collect Frequent Downloads" method-name="collectFrequentDownloads"
+				value="15" unit="minutes">
+
+			</collector>
+		</data-collection>
+		<properties>
+			<group id="FXMLogin">
+				<string id="userName" canBeBlank="false" label="MySQL Username" />
+				<string id="password" canBeBlank="false" encrypted="true"
+					label="MySQL Password" />
+				<string id="fxmHostname" canBeBlank="false" label="FXM Hostname/IP" />
+			</group>
+		</properties>
+	</agent>
 
 </agent-definition>
