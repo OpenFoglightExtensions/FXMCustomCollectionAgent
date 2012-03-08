@@ -1,0 +1,2 @@
+select s.ClientIP saugerip, u.Count anzahl from Session s, UserSessionValueCount u where s.ResourceID = u.ResourceID and s.UserAgent not like '%bot%' and u.Count > 1000 order by u.Count desc limit 20;
+
