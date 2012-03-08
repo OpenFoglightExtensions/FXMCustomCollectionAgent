@@ -43,6 +43,10 @@
 				<string id="fxmHostname" canBeBlank="false" label="FXM Hostname/IP" />
 				<integer id="fxmPort" canBeBlank="false" default="3306" renderInline="true" gtEqualZero="true" notEqualZero="true"/>
 			</group>
+			<group id="FrequentDownloads" label="Frequent Downloaders">
+			<integer id="lowLimit" label="Low Limit of Requests:" gtEqualZero="true" />
+			<integer id="numSessions" gtEqualZero="true" label="Session count to report"/>
+			</group>
 		</properties>
 	</agent>
 
