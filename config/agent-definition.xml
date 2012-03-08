@@ -41,6 +41,7 @@
 				<string id="password" canBeBlank="false" encrypted="true"
 					label="MySQL Password" />
 				<string id="fxmHostname" canBeBlank="false" label="FXM Hostname/IP" />
+				<integer id="fxmPort" canBeBlank="false" default="3306" renderInline="true" gtEqualZero="true" notEqualZero="true"/>
 			</group>
 		</properties>
 	</agent>
