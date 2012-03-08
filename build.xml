@@ -224,7 +224,7 @@
                      to be "topology-localizations". To see the new localized names go to the Schema Browser,
                      select one of your topology types, and hover over the property name. The page itself should
                      show the camelCase name, but the hover should show the new localized name. -->
-                <localizations
+              <!--  <localizations
                     name="topology-localizations"
                     cartridge="${customfxmdatacollector.agent-manifest.name}"
                     version="${customfxmdatacollector.agent-manifest.ver}"
@@ -233,6 +233,7 @@
                         <include name="**/*.properties"/>
                     </fileset>
                 </localizations>
+                -->
             </cartridge>
         </car>
 
