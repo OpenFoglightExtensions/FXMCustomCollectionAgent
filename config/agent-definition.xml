@@ -23,6 +23,7 @@
 		<topology-file filename="../config/CustomFXMDataCollector-topology.xml" />
 
 		<!-- Other topology files can be included here if necessary -->
+		
 	</topology-types>
 
 	<agent name="CustomFXMDataCollector" package="de.quest.pso.fxm.agent.customCollector"
@@ -34,6 +35,7 @@
 				value="10" unit="minutes">
 
 			</collector>
+			
 		</data-collection>
 		<properties>
 			<group id="FXMLogin">
@@ -48,6 +50,7 @@
 			<integer id="numSessions" gtEqualZero="true" label="Session count to report" default="10"/>
 			</group>
 		</properties>
+		<simulator-sample name="CustomFXMCollection"/>
 	</agent>
 
 </agent-definition>
