@@ -41,6 +41,7 @@ public class CustomFXMDataCollectorImpl implements
 	private final CustomFXMDataCollectorSupportBundle mBundle;
 
 	private final CustomFXMDataCollectorDataProvider mDataProvider;
+	private CustomFXMDataCollectorPropertyWrapper mProperties;
 
 	/**
 	 * Called by FglAM to create a new instance of this agent. This constructor
@@ -88,6 +89,8 @@ public class CustomFXMDataCollectorImpl implements
 		// and allows it to contribute information to the support bundle.
 		mBundle = new CustomFXMDataCollectorSupportBundle(this);
 		mRegistrationService.registerAllListeners(mBundle);
+		mProperties = new CustomFXMDataCollectorPropertyWrapper(serviceFactory.getService(ASPService3.class));
+		
 
 		// Log some basic info to indicate that the agent has been created
 		mLogger.log("agentVersion", "CustomFXMDataCollector", "1.0.0");
