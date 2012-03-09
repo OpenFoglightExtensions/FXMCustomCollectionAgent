@@ -18,7 +18,7 @@
 	<type name="CustomFXMCollectionRoot" extends="CollectionModelRoot">
 		<property name="name" type="String" is-identity="true" />
 		<property name='fxmCollection' type='CustomFXMCollection'
-			is-containment="true" />
+			is-containment="true" is-many="true" />
 	</type>
 
 	<type name="CustomFXMCollection" extends="TopologyObject">

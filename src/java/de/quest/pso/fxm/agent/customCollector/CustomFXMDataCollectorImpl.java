@@ -197,7 +197,9 @@ public class CustomFXMDataCollectorImpl implements
 
 			mLogger.debug("Result :" + resultSet.toString());
 
-			CustomFXMCollection collection = new CustomFXMCollection(mProperties.getFxmHostname(), new CustomFXMCollectionRoot(FXM_CUSTOM_MODEL_NAME));
+			CustomFXMCollectionRoot model  = new CustomFXMCollectionRoot(FXM_CUSTOM_MODEL_NAME);
+			CustomFXMCollection collection = new CustomFXMCollection(mProperties.getFxmHostname(),model);
+			model.getFxmCollection().add(collection);
 
 			CustomFXMFrequentHitSessions frequentHits = new CustomFXMFrequentHitSessions(collection);
 			collection.setFrequentHits(frequentHits );
