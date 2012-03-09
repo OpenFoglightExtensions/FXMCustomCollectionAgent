@@ -199,7 +199,7 @@ public class CustomFXMDataCollectorImpl implements
 
 			CustomFXMCollection collection = new CustomFXMCollection(mProperties.getFxmHostname(), new CustomFXMCollectionRoot(FXM_CUSTOM_MODEL_NAME));
 
-			CustomFXMFrequentHitSessions frequentHits = new CustomFXMFrequentHitSessions();
+			CustomFXMFrequentHitSessions frequentHits = new CustomFXMFrequentHitSessions(collection);
 			collection.setFrequentHits(frequentHits );
 			
 		 List<TopHitSessionsEntry> sessions = frequentHits.getTopHitSessions();
