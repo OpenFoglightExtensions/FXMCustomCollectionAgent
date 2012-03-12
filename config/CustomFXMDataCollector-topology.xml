@@ -40,7 +40,10 @@
 	   </type>
 	<type name='TopHitSessionsEntry' extends='DataObject'>
         <property name='ipAdresse' type='String' is-many='false' is-containment='false' is-identity="true"/>
-        <property name='hits' type='Long' is-many='false' is-containment='false' unit-name="count"/>
+        <property name='hitsSum' type='Long' is-many='false' is-containment='false' unit-name="count"/>
+        <property name='hitsMax' type='Long' is-many='false' is-containment='false' unit-name="count"/>
+        <property name='hitsMin' type='Long' is-many='false' is-containment='false' unit-name="count"/>
+        <property name='numSessions' type='Long' is-many='false' is-containment='false' unit-name="count"/>
     </type>
 
     <!-- New observation types have to extend either the StringObservation or 

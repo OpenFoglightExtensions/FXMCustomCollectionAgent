@@ -186,10 +186,14 @@ public class CustomFXMDataCollectorImpl implements
 			// .executeQuery("select s.ClientIP saugerip, u.Count anzahl from Session s, UserSessionValueCount u where s.ResourceID = u.ResourceID and s.UserAgent not like '%bot%' and u.Count > 1000 order by u.Count desc limit 20;");
 
 			PreparedStatement preparedStatement = connect
-					.prepareStatement("select s.ClientIP saugerip, u.Count anzahl "
-							+ "from Session s, UserSessionValueCount u "
-							+ "where s.ResourceID = u.ResourceID and s.UserAgent not like '%bot%' and u.Count > ? "
-							+ "order by u.Count desc limit ?;");
+					.prepareStatement("select s.ClientIP saugerip, MAX(u.Count) anzahlMax , " +
+				              "MIN(u.Count) as anzahlMin, SUM(u.Count) as hits, " +
+				              "count(*) as numberSessions,s.timestamp " +
+				      "from Session s, UserSessionValueCount u  " +
+				      "where (s.ResourceID = u.ResourceID  ) and " +
+				      "s.timestamp = (select MAX(s.timestamp) from Session s ) " +
+				      "group by saugerip,s.timestamp having anzahlMax > ? order by anzahlMax desc limit ?;");
+			
 
 			preparedStatement.setInt(1, mProperties.getLowLimit());
 			preparedStatement.setInt(2, mProperties.getNumSessions());
@@ -214,7 +218,11 @@ public class CustomFXMDataCollectorImpl implements
 				i++;
 			
 				TopHitSessionsEntry entry = new TopHitSessionsEntry(resultSet.getString(1));
-				entry.setHits(resultSet.getLong(2));
+				entry.setHitsMax(resultSet.getLong(2));
+				entry.setHitsMin(resultSet.getLong(3));
+				entry.setHitsSum(resultSet.getLong(4));
+				entry.setNumSessions(resultSet.getLong(5));
+				
 				sessions.add(entry);
 			}
 			
