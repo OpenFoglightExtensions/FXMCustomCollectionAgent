@@ -33,6 +33,10 @@
 
 		<property name="topHitSessions" type="TopHitSessionsObservation"
 			is-containment="true" />
+			<property name='topHitSessionsTrend' type='TopHitSessionsTrend' is-many='true' is-containment='true'>
+			<annotation name="DerivationExpression" value='getObservationTrend(scope, args[1], args[2], "topHitSessions")'/>
+			<annotation name="TimeRangeSensitive"/>
+		</property>
 	</type>
 
 	<type name='TopHitSessionsValue' extends='ObservedValue'>
@@ -45,6 +49,12 @@
         <property name='hitsMin' type='Long' is-many='false' is-containment='false' unit-name="count"/>
         <property name='numSessions' type='Long' is-many='false' is-containment='false' unit-name="count"/>
     </type>
+    <type name='TopHitSessionsTrend' extends='TopHitSessionsEntry'>
+		<property name='hitsSum' type='Metric' is-containment='true' unit-name='count'/>
+		<property name='hitsMax' type='Metric' is-containment='true' unit-name='count'/>
+		<property name='hitsMin' type='Metric' is-containment='true' unit-name='count'/>
+		<property name='numSessions' type='Metric' is-containment='true' unit-name='count'/>
+	</type>
 
     <!-- New observation types have to extend either the StringObservation or 
          ComplexObservation type so that the server's persistence service knows how 
