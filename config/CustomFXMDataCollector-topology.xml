@@ -22,45 +22,78 @@
 	</type>
 
 	<type name="CustomFXMCollection" extends="TopologyObject">
+		<property name='name' type='String'>
+			<annotation name='DerivationExprType' value='Script' />
+			<annotation name='DerivationExpression'>
+				<value>
+					StringBuilder longName = new StringBuilder();
+					longName.append(scope.get("fxmName"));
+					return longName.toString();
+				</value>
+			</annotation>
+		</property>
+
+
 		<property name="fxmName" is-identity="true" type="String" />
-		<property name="model" type="CustomFXMCollectionRoot" is-identity="true"/>
+
+		<property name="model" type="CustomFXMCollectionRoot"
+			is-identity="true" />
 		<property name="frequentHits" type="CustomFXMFrequentHitSessions"
 			is-containment="true" is-many="false" />
 	</type>
 
 	<type name="CustomFXMFrequentHitSessions" extends="TopologyObject">
-		<property name="collection" type="CustomFXMCollection" is-identity="true" />
+		<property name="collection" type="CustomFXMCollection"
+			is-identity="true" />
 
 		<property name="topHitSessions" type="TopHitSessionsObservation"
 			is-containment="true" />
-
-		<property name='topHitSessionsTrend' type='TopHitSessionsTrend' is-many='true' is-containment='true'>
-			<annotation name="DerivationExpression" value='getObservationTrend(scope, args[1], args[2], "topHitSessions")'/>
-			<annotation name="TimeRangeSensitive"/>
+		<property name='topHitSessionsTrend' type='TopHitSessionsTrend'
+			is-many='true' is-containment='true'>
+			<annotation name="DerivationExpression"
+				value='getObservationTrend(scope, args[1], args[2], "topHitSessions")' />
+			<annotation name="TimeRangeSensitive" />
 		</property>
 	</type>
 	
 	
 
 	<type name='TopHitSessionsValue' extends='ObservedValue'>
-	   <property name='value' type='TopHitSessionsEntry' is-many='true' is-containment='false'/>
-	   </type>
-	<type name='TopHitSessionsEntry' extends='DataObject'>
-        <property name='ipAdresse' type='String' is-many='false' is-containment='false' is-identity="true"/>
-        <property name='hits' type='Long' is-many='false' is-containment='false' unit-name="count"/>
-    </type>
-    
-    	<type name='TopHitSessionsTrend' extends='TopHitSessionsEntry'>
-		<property name='hits' type='Metric' is-containment='true' unit-name='count'/>
+		<property name='value' type='TopHitSessionsEntry' is-many='true'
+			is-containment='false' />
 	</type>
-    
+	<type name='TopHitSessionsEntry' extends='DataObject'>
+		<property name='ipAdresse' type='String' is-many='false'
+			is-containment='false' is-identity="true" />
+		<property name='hitsSum' type='Long' is-many='false'
+			is-containment='false' unit-name="count" />
+		<property name='hitsMax' type='Long' is-many='false'
+			is-containment='false' unit-name="count" />
+		<property name='hitsMin' type='Long' is-many='false'
+			is-containment='false' unit-name="count" />
+		<property name='numSessions' type='Long' is-many='false'
+			is-containment='false' unit-name="count" />
+	</type>
+	<type name='TopHitSessionsTrend' extends='TopHitSessionsEntry'>
+		<property name='hitsSum' type='Metric' is-containment='true'
+			unit-name='count' />
+		<property name='hitsMax' type='Metric' is-containment='true'
+			unit-name='count' />
+		<property name='hitsMin' type='Metric' is-containment='true'
+			unit-name='count' />
+		<property name='numSessions' type='Metric' is-containment='true'
+			unit-name='count' />
+	</type>
 
-    <!-- New observation types have to extend either the StringObservation or 
-         ComplexObservation type so that the server's persistence service knows how 
-         to handle it. -->
-    <type name='TopHitSessionsObservation' extends='ComplexObservation'>
-        <property name='current' type='TopHitSessionsValue' is-many='false' is-containment='true'/>
-        <property name='latest'  type='TopHitSessionsValue' is-many='false' is-containment='true'/>
-        <property name='history' type='TopHitSessionsValue' is-many='true'  is-containment='true'/>
-    </type>
+	<!-- New observation types have to extend either the StringObservation or 
+		ComplexObservation type so that the server's persistence service knows how 
+		to handle it. -->
+	<type name='TopHitSessionsObservation' extends='ComplexObservation'>
+		<property name='current' type='TopHitSessionsValue' is-many='false'
+			is-containment='true' />
+		<property name='latest' type='TopHitSessionsValue' is-many='false'
+			is-containment='true' />
+		<property name='history' type='TopHitSessionsValue' is-many='true'
+			is-containment='true' />
+	</type>
 </types>

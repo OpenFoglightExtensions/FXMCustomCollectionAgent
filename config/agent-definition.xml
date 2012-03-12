@@ -11,7 +11,7 @@
 	OR DISTRIBUTING THIS SOFTWARE OR ITS DERIVATIVES. -->
 
 <agent-definition xmlns="urn:X-quest.com:glue/agent/definition/1.9"
-	name="CustomFXMDataCollector" allow-asynchronous-access="true" ver="1.0.3">
+	name="CustomFXMDataCollector" allow-asynchronous-access="true" ver="1.1.0">
 
 	<!-- Since this configuration was generated with version 5.6.2 of the developer's 
 		kit, it requires at least a matching version of FglAM -->
